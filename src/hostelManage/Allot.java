@@ -1,5 +1,6 @@
 package hostelManage;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -11,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -19,7 +21,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 @SuppressWarnings("serial")
 public class Allot extends JFrame {
@@ -27,12 +37,13 @@ public class Allot extends JFrame {
 	private JPanel contentPane;
 	public JTextField txtAllotID;
 	public JComboBox<Object> cmbAllotHstNm,cmbAllotHstTpe;
-	Connection myconn;
-	public JButton btnSearch;
+	static Connection myconn;
+	public JButton btnSearch,btnBack;
+    Border border = BorderFactory.createLineBorder(Color.red);
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -51,6 +62,7 @@ public class Allot extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(400, 150, 530, 355);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -96,9 +108,15 @@ public class Allot extends JFrame {
 		JButton btnARoom = new JButton("Allot Room");
 		btnARoom.setFont(new Font("Bookman Old Style", Font.PLAIN, 14));
 		btnARoom.setBounds(309, 253, 121, 23);
+		btnARoom.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				jasperReport();
+			}
+		});
 		contentPane.add(btnARoom);
 		
-		JButton btnBack = new JButton("Back");
+		btnBack = new JButton("Back");
 		btnBack.setFont(new Font("Bookman Old Style", Font.PLAIN, 14));
 		btnBack.setBounds(89, 253, 89, 23);
 		btnBack.addActionListener(new ActionListener(){
@@ -136,10 +154,37 @@ public class Allot extends JFrame {
 		contentPane.add(btnSearch);
 	}
 	
+	protected void jasperReport() {
+		String reportpath = "C:\\Users\\daenjelk\\Documents\\Coordinates\\allotRoom.jrxml";
+		//String reportpdf = "C:\\Users\\daenjelk\\Documents\\Coordinates\\allotRoom.pdf";
+		//String deflt = "C:\\Users\\daenjelk\\Documents\\Coordinates\\JasperSoft\\DefaultSample.jrxml";
+		
+		try {
+			myconn = JConnection.ConnecrDb();
+			JasperReport js = JasperCompileManager.compileReport(reportpath);
+			//JRDataSource jreData = new JREmptyDataSource();
+			JasperPrint jp = JasperFillManager.fillReport(js,null,myconn);
+			JasperViewer.viewReport(jp);
+			//JasperExportManager.exportReportToPdfFile(jp,reportpdf);
+		} catch (JRException e1) {
+			e1.printStackTrace();
+		}
+		
+	}
 	public void remove4Db(){
 		myconn = JConnection.ConnecrDb();
 		
 		String query = "delete from registration where StdID=? and HostelN=? and HostelType=?";
+		if(txtAllotID.getText().equals("")){
+			txtAllotID.setBorder(border);
+			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+		}else if(cmbAllotHstNm.getSelectedIndex() == 0){
+			cmbAllotHstNm.setBorder(border);
+			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+		}else if(cmbAllotHstTpe.getSelectedIndex() == 0){
+			cmbAllotHstTpe.setBorder(border);
+			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+		}else {
 		try {
 			PreparedStatement stmt = myconn.prepareStatement(query);
 			stmt.setString(1, txtAllotID.getText().toString());
@@ -152,11 +197,17 @@ public class Allot extends JFrame {
 			JOptionPane.showMessageDialog(null, e);
 			e.printStackTrace();
 		}
+		}
 	}
 	public void search4Db(){
 		myconn = JConnection.ConnecrDb();
 		
 		String query = "select HostelN,HostelType from registration where StdID=?";
+		
+		if(txtAllotID.getText().equals("")){
+			txtAllotID.setBorder(border);
+			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+		}else {
 		try {
 			PreparedStatement stmt = myconn.prepareStatement(query);
 			stmt.setString(1, txtAllotID.getText().toString());
@@ -172,6 +223,7 @@ public class Allot extends JFrame {
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, e);
 			e.printStackTrace();
+		}
 		}
 	}
 	protected void close() {

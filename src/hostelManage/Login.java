@@ -1,10 +1,12 @@
 package hostelManage;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
@@ -20,6 +23,7 @@ public class Login extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtUsername;
 	private JPasswordField passwordField;
+    Border border = BorderFactory.createLineBorder(Color.red);
 
 	/**
 	 * Launch the application.
@@ -44,6 +48,7 @@ public class Login extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(500, 150, 442, 332);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -98,7 +103,13 @@ public class Login extends JFrame {
 	
 	@SuppressWarnings("deprecation")
 	public void ValidateUser(){
-		
+		if(txtUsername.getText().equals("")){
+			txtUsername.setBorder(border);
+			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+		}else if(passwordField.getText().equals("")){
+			passwordField.setBorder(border);
+			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+		}else {
 		if(txtUsername.getText().equals("Admin") && passwordField.getText().equals("Admin")){
 			JOptionPane.showMessageDialog(null,"Welcome to Hostel Management System");
 			new Registration().setVisible(true);
@@ -106,5 +117,6 @@ public class Login extends JFrame {
 		}else{
 			JOptionPane.showMessageDialog(null,"Incorrect UserName and Password");
 		}
+	}
 	}
 }

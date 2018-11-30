@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -20,7 +21,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.UIManager;
 
 @SuppressWarnings("serial")
 public class Registration extends JFrame {
@@ -34,6 +37,7 @@ public class Registration extends JFrame {
 	private JTextField txtStdEmail;
 	private JTextField txtStdTel;
     static Connection myconn = null;
+    Border border = BorderFactory.createLineBorder(Color.red);
 	/**
 	 * Launch the application.
 	 */
@@ -54,9 +58,11 @@ public class Registration extends JFrame {
 	 * Create the frame.
 	 */
 	public Registration() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(300, 100, 809, 528);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -88,6 +94,7 @@ public class Registration extends JFrame {
 		contentPane.add(lblGender);
 		
 		txtFirstN = new JTextField();
+		txtFirstN.setBorder(UIManager.getBorder("Button.border"));
 		txtFirstN.setBounds(79, 141, 116, 20);
 		contentPane.add(txtFirstN);
 		txtFirstN.addKeyListener(new KeyAdapter() {
@@ -104,6 +111,7 @@ public class Registration extends JFrame {
 		txtFirstN.setColumns(10);
 		
 		txtSecondN = new JTextField();
+		txtSecondN.setBorder(UIManager.getBorder("Button.border"));
 		txtSecondN.setColumns(10);
 		txtSecondN.setBounds(231, 141, 116, 20);
 		txtSecondN.addKeyListener(new KeyAdapter() {
@@ -120,6 +128,7 @@ public class Registration extends JFrame {
 		contentPane.add(txtSecondN);
 		
 		txtStdID = new JTextField();
+		txtStdID.setBorder(UIManager.getBorder("Button.border"));
 		txtStdID.setColumns(10);
 		txtStdID.setBounds(185, 188, 116, 20);
 		txtStdID.addKeyListener(new KeyAdapter() {
@@ -197,6 +206,12 @@ public class Registration extends JFrame {
 					lblAmount.setText("15,000");
 				}else if(cmbHostelN.getSelectedItem().equals("Krypton Hostel") && cmbHostelType.getSelectedItem().equals("Triple")){
 					lblAmount.setText("14,500");
+				}else if(cmbHostelN.getSelectedItem().equals("--Choose--") && cmbHostelType.getSelectedItem().equals("Single")){
+					lblAmount.setText("0.0");
+				}else if(cmbHostelN.getSelectedItem().equals("--Choose--") && cmbHostelType.getSelectedItem().equals("Double")){
+					lblAmount.setText("0.0");
+				}else if(cmbHostelN.getSelectedItem().equals("--Choose--") && cmbHostelType.getSelectedItem().equals("Triple")){
+					lblAmount.setText("0.0");
 				}
 			}
 			
@@ -239,6 +254,14 @@ public class Registration extends JFrame {
 					lblAmount.setText("15,000");
 				}else if(cmbHostelN.getSelectedItem().equals("Krypton Hostel") && cmbHostelType.getSelectedItem().equals("Triple")){
 					lblAmount.setText("14,500");
+				}else if(cmbHostelN.getSelectedItem().equals("Amani Hostel") && cmbHostelType.getSelectedItem().equals("--Choose--")){
+					lblAmount.setText("0.0");
+				}else if(cmbHostelN.getSelectedItem().equals("Heri Hostel") && cmbHostelType.getSelectedItem().equals("--Choose--")){
+					lblAmount.setText("0.0");
+				}else if(cmbHostelN.getSelectedItem().equals("Wakes Hostel") && cmbHostelType.getSelectedItem().equals("--Choose--")){
+					lblAmount.setText("0.0");
+				}else if(cmbHostelN.getSelectedItem().equals("Krypton Hostel") && cmbHostelType.getSelectedItem().equals("--Choose--")){
+					lblAmount.setText("0.0");
 				}
 			}
 			
@@ -295,6 +318,7 @@ public class Registration extends JFrame {
 		contentPane.add(lblStudentEmail);
 		
 		txtStdEmail = new JTextField();
+		txtStdEmail.setBorder(UIManager.getBorder("Button.border"));
 		txtStdEmail.setColumns(10);
 		txtStdEmail.setBounds(203, 284, 135, 20);
 		contentPane.add(txtStdEmail);
@@ -305,6 +329,7 @@ public class Registration extends JFrame {
 		contentPane.add(lblStudentTel);
 		
 		txtStdTel = new JTextField();
+		txtStdTel.setBorder(UIManager.getBorder("Button.border"));
 		txtStdTel.setColumns(10);
 		txtStdTel.setBounds(203, 320, 116, 20);
 		txtStdTel.addKeyListener(new KeyAdapter(){
@@ -327,28 +352,37 @@ public class Registration extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				new Allot().setVisible(true);
-				dispose();
+				new Allot().btnBack.setVisible(false);
+				//new Registration().setVisible(false);
 			}
 		});
 		contentPane.add(btnAllotRoom);
 	}
 	
 	public void getDetails(){
-		if(txtFirstN.getText().equals(null)){
+		if(txtFirstN.getText().equals("")){
+			txtFirstN.setBorder(border);
 			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
-		}else if(txtSecondN.getText().equals(null)){
+		}else if(txtSecondN.getText().equals("")){
+			txtSecondN.setBorder(border);
 			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
-		}else if(txtStdID.getText().equals(null)){
+		}else if(txtStdID.getText().equals("")){
+			txtStdID.setBorder(border);
 			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
-		}else if(txtStdEmail.getText().equals(null)){
+		}else if(txtStdEmail.getText().equals("")){
+			txtStdEmail.setBorder(border);
 			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
-		}else if(txtStdTel.getText().equals(null)){
+		}else if(txtStdTel.getText().equals("")){
+			txtStdTel.setBorder(border);
 			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else if(cmbGender.getSelectedIndex() == (0)){
+			cmbGender.setBorder(border);
 			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else if(cmbHostelN.getSelectedIndex() == (0)){
+			cmbHostelN.setBorder(border);
 			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else if(cmbHostelType.getSelectedIndex() == (0)){
+			cmbHostelType.setBorder(border);
 			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else{
 			insert2Db();
