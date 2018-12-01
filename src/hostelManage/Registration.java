@@ -285,7 +285,7 @@ public class Registration extends JFrame {
 		});
 		contentPane.add(btnRegister);
 		
-		JButton btnCancel = new JButton("Cancel");
+		JButton btnCancel = new JButton("Clear");
 		btnCancel.setFont(new Font("Bookman Old Style", Font.PLAIN, 14));
 		btnCancel.setBounds(434, 404, 89, 25);
 		btnCancel.addActionListener(new ActionListener(){
@@ -320,7 +320,7 @@ public class Registration extends JFrame {
 		txtStdEmail = new JTextField();
 		txtStdEmail.setBorder(UIManager.getBorder("Button.border"));
 		txtStdEmail.setColumns(10);
-		txtStdEmail.setBounds(203, 284, 135, 20);
+		txtStdEmail.setBounds(203, 284, 199, 20);
 		contentPane.add(txtStdEmail);
 		
 		JLabel lblStudentTel = new JLabel("Student Tel:");
@@ -352,8 +352,6 @@ public class Registration extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				new Allot().setVisible(true);
-				new Allot().btnBack.setVisible(false);
-				//new Registration().setVisible(false);
 			}
 		});
 		contentPane.add(btnAllotRoom);
@@ -362,28 +360,28 @@ public class Registration extends JFrame {
 	public void getDetails(){
 		if(txtFirstN.getText().equals("")){
 			txtFirstN.setBorder(border);
-			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else if(txtSecondN.getText().equals("")){
 			txtSecondN.setBorder(border);
-			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else if(txtStdID.getText().equals("")){
 			txtStdID.setBorder(border);
-			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else if(txtStdEmail.getText().equals("")){
 			txtStdEmail.setBorder(border);
-			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else if(txtStdTel.getText().equals("")){
 			txtStdTel.setBorder(border);
-			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else if(cmbGender.getSelectedIndex() == (0)){
 			cmbGender.setBorder(border);
-			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else if(cmbHostelN.getSelectedIndex() == (0)){
 			cmbHostelN.setBorder(border);
-			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else if(cmbHostelType.getSelectedIndex() == (0)){
 			cmbHostelType.setBorder(border);
-			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else{
 			insert2Db();
 			JOptionPane.showMessageDialog(null, "Registration Successful");
@@ -393,7 +391,7 @@ public class Registration extends JFrame {
 			allt.cmbAllotHstTpe.setSelectedIndex(cmbHostelType.getSelectedIndex());
 			allt.btnSearch.setVisible(false);
 			allt.setVisible(true);
-			dispose();
+			//dispose();
 		}
 	}
 	

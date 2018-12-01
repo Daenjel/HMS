@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,6 +30,9 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 @SuppressWarnings("serial")
@@ -59,7 +63,7 @@ public class Allot extends JFrame {
 	 * Create the frame.
 	 */
 	public Allot() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(400, 150, 530, 355);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.LIGHT_GRAY);
@@ -116,14 +120,13 @@ public class Allot extends JFrame {
 		});
 		contentPane.add(btnARoom);
 		
-		btnBack = new JButton("Back");
+		btnBack = new JButton("Reports");
 		btnBack.setFont(new Font("Bookman Old Style", Font.PLAIN, 14));
 		btnBack.setBounds(89, 253, 89, 23);
 		btnBack.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new Registration().setVisible(true);
-				dispose();
+				allotReports();
 			}
 		});
 		contentPane.add(btnBack);
@@ -154,22 +157,67 @@ public class Allot extends JFrame {
 		contentPane.add(btnSearch);
 	}
 	
-	protected void jasperReport() {
-		String reportpath = "C:\\Users\\daenjelk\\Documents\\Coordinates\\allotRoom.jrxml";
-		//String reportpdf = "C:\\Users\\daenjelk\\Documents\\Coordinates\\allotRoom.pdf";
-		//String deflt = "C:\\Users\\daenjelk\\Documents\\Coordinates\\JasperSoft\\DefaultSample.jrxml";
+	protected void allotReports() {
+		String reportpath = "C:\\Users\\daenjelk\\Documents\\Coordinates\\JasperSoft\\allotReports.jrxml";
 		
 		try {
 			myconn = JConnection.ConnecrDb();
-			JasperReport js = JasperCompileManager.compileReport(reportpath);
-			//JRDataSource jreData = new JREmptyDataSource();
-			JasperPrint jp = JasperFillManager.fillReport(js,null,myconn);
-			JasperViewer.viewReport(jp);
-			//JasperExportManager.exportReportToPdfFile(jp,reportpdf);
+				    
+			JasperReport jReport = JasperCompileManager.compileReport(reportpath);
+			JasperPrint jPrint = JasperFillManager.fillReport(jReport,null,myconn);
+			JasperViewer jView = new JasperViewer(jPrint);
+			
+			JDialog viewer = new JDialog(this, "Allot Report", true);
+		    viewer.setBounds(jView.getBounds());
+		    viewer.getContentPane().add(jView.getContentPane());
+		    viewer.setResizable(true);
+		    viewer.setIconImage(jView.getIconImage());
+		    viewer.setVisible(true);
 		} catch (JRException e1) {
 			e1.printStackTrace();
 		}
 		
+	}
+	protected void jasperReport() {
+		String reportpath = "C:\\Users\\daenjelk\\Documents\\Coordinates\\JasperSoft\\allotRoom.jrxml";
+		//String reportpdf = "C:\\Users\\daenjelk\\Documents\\Coordinates\\allotRoom.pdf";
+		//String deflt = "C:\\Users\\daenjelk\\Documents\\Coordinates\\JasperSoft\\DefaultSample.jrxml";
+		
+		if(txtAllotID.getText().equals("")){
+			txtAllotID.setBorder(border);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+		}else if(cmbAllotHstNm.getSelectedIndex() == 0){
+			cmbAllotHstNm.setBorder(border);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+		}else if(cmbAllotHstTpe.getSelectedIndex() == 0){
+			cmbAllotHstTpe.setBorder(border);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+		}else {
+		try {
+			myconn = JConnection.ConnecrDb();
+			
+		    JasperDesign jdesign =JRXmlLoader.load(reportpath);
+		    JRDesignQuery  myQuery=new JRDesignQuery();
+		    myQuery.setText("select * from registration where stdID = "+txtAllotID.getText()+"");
+		    jdesign.setQuery(myQuery);
+		    
+			JasperReport jReport = JasperCompileManager.compileReport(jdesign);
+			//JRDataSource jreData = new JREmptyDataSource();
+			JasperPrint jPrint = JasperFillManager.fillReport(jReport,null,myconn);
+			//JasperViewer.viewReport(jPrint);
+			//JasperExportManager.exportReportToPdfFile(jp,reportpdf);
+			JasperViewer jView = new JasperViewer(jPrint);
+			
+			JDialog viewer = new JDialog(this, "Student Invoice", true);
+		    viewer.setBounds(jView.getBounds());
+		    viewer.getContentPane().add(jView.getContentPane());
+		    viewer.setResizable(true);
+		    viewer.setIconImage(jView.getIconImage());
+		    viewer.setVisible(true);
+		} catch (JRException e1) {
+			e1.printStackTrace();
+		}
+		}
 	}
 	public void remove4Db(){
 		myconn = JConnection.ConnecrDb();
@@ -177,13 +225,13 @@ public class Allot extends JFrame {
 		String query = "delete from registration where StdID=? and HostelN=? and HostelType=?";
 		if(txtAllotID.getText().equals("")){
 			txtAllotID.setBorder(border);
-			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else if(cmbAllotHstNm.getSelectedIndex() == 0){
 			cmbAllotHstNm.setBorder(border);
-			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else if(cmbAllotHstTpe.getSelectedIndex() == 0){
 			cmbAllotHstTpe.setBorder(border);
-			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else {
 		try {
 			PreparedStatement stmt = myconn.prepareStatement(query);
@@ -206,7 +254,7 @@ public class Allot extends JFrame {
 		
 		if(txtAllotID.getText().equals("")){
 			txtAllotID.setBorder(border);
-			JOptionPane.showConfirmDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,"Some Values are Empty, Please Input Values","Cannot Accept null functions",JOptionPane.OK_OPTION);
 		}else {
 		try {
 			PreparedStatement stmt = myconn.prepareStatement(query);
